@@ -1,0 +1,27 @@
+#! /bin/sh
+
+echo "MX1 APM module driver test with QT started"
+echo
+
+cd /tmp
+
+insmod /drivers/apm.o
+
+echo
+echo "Now we'll do the standby test."
+echo "You should see that LED DS6 will stop flashing ... press <ENTER> to continue ..."
+
+/test/StandByTest
+
+echo
+echo "Now we'll do the suspend test."
+
+echo "use pen touch to continue ..."
+
+/test/SuspendTest
+
+echo
+echo "You should now see:"
+echo "  - LED DS6 resumes flashing"
+echo "  - LCD is turned on"
+echo "  - modEx receives RESUME event"

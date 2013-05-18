@@ -1,0 +1,50 @@
+#! /bin/sh
+cd /tmp
+
+echo "USB device module driver test"
+echo "Don't connect the USB cable yet."
+echo
+insmod /drivers/usb.o
+if test -n "`mount | grep sdisk14m`"; then
+  umount /mnt/sdisk14m
+fi
+
+formatsdisk14m
+
+clear
+echo "1 Transfer from ADS (Linux) to PC (Windows 2000)"
+echo "2 Transfer from PC (Windows 2000) to ADS (Linux)"
+echo
+echo "Please enter a number ..."
+read choice
+
+if test $choice -eq 1; then
+  clear
+  echo "Transfer from ADS (Linux) to PC (Windows 2000)"
+  echo
+  mount -t vfat /dev/sdisk14m /mnt/sdisk14m
+  echo "1) Now copy the file(s) to directory /mnt/sdisk14m."
+  echo "2) Type 'umount /mnt/sdisk14m"
+  echo "3) Plug the USB cable to PC"
+  echo
+  echo "You'll see a new drive in File Explorer on the PC side."
+  echo "And inside the new drive you'll see the files just copied."
+fi
+
+if test $choice -eq 2; then
+  echo "Transfer from PC (Windows 2000) to ADS (Linux)"
+  echo
+  echo "1) Now plug the USB cable to PC and you'll see a new empty 14M drive."
+  echo "2) Copy file(s) to this drive, then left-click the mouse to another drive,"
+  echo "   then right-click the mouse on this new drive and select 'eject'."
+  echo "3) Then disconect the USB cable."
+  echo
+  echo "Press any key to continue ..."
+  read dummy
+  mount -t vfat /dev/sdisk14m /mnt/sdisk14m
+  echo
+  echo "Here are the files you just copied:"
+  echo
+  ls /mnt/sdisk14m
+  echo
+fi

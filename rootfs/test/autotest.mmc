@@ -1,0 +1,71 @@
+#! /bin/sh
+cd /tmp
+
+echo "MMC driver test"
+echo
+echo "insmod from /drivers/mmc.o"
+insmod /drivers/mmc.o
+
+
+# REMARK: change the name of the device here --------vvv
+
+mkdir disk
+mkdir disk1
+
+echo "Now choose to test which sdhc socket"
+echo "1 test sdhc1"
+echo "2 test sdhc2"
+echo
+read choice
+
+if test $choice -eq 1; then
+	echo "Now insert MMC card into socket1 and press <ENTER> to continue ..."
+	read dummy
+	mount -t msdos /dev/mmc disk
+fi
+if test $choice -eq 2; then
+	echo "Now insert MMC card into socket2 and press <ENTER> to continue ..."
+	read dummy
+	mount -t msdos /dev/mmc1 disk1
+fi
+
+while [ $choice != 0 ]
+do
+	echo "1 List the files stored in sdhc1"
+	echo "2 do read/write testing in sdhc1"
+	echo "3 List the files stored in sdhc2"
+	echo "4 do read/write testing in sdhc2"
+	echo "5 finish test ..."
+	read choice
+	
+	if test $choice -eq 1; then
+		echo "here is the files ..."
+		ls -l /tmp/disk/
+	fi
+		
+	if test $choice -eq 2; then
+		echo "first write 10m9.txt ..."
+		/test/writefile /tmp/disk/10m9.txt 10m 9
+		echo "read&compare it ...."
+		/test/ReadAndCompare /tmp/disk/10m9.txt 10m 9 1 1
+		echo "finish 10m size file testing .."
+	fi
+	
+	if test $choice -eq 3; then
+		echo "Here is files in sdhc2 ..."
+		ls -l /tmp/disk1/
+	fi
+		
+	if test $choice -eq 4; then
+		echo "first write 10m9.txt ..."
+		/test/writefile /tmp/disk1/10m9.txt 10m 9
+		echo "read&compare it ...."
+		/test/ReadAndCompare /tmp/disk1/10m9.txt 10m 9 1 1
+		echo "finish 10m size file testing .."
+	fi
+	
+	if test $choice -eq 5; then
+		exit
+	fi	
+done
+

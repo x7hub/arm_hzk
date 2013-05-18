@@ -1,0 +1,10 @@
+#! /bin/sh
+
+echo "Keypad device module driver test"
+insmod /drivers/i2c-keypad.o
+
+echo "The keys on the ADS can now be pressed,"
+echo "and the corresponding mapped key will be printed"
+echo "The test will end for 100 key strokes"
+
+/test/ptest

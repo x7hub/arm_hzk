@@ -1,0 +1,3 @@
+#! /bin/sh
+insmod /usr/sbin/lcdwakeup.o
+rmmod lcdwakeup

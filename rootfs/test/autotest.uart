@@ -1,0 +1,152 @@
+#! /bin/sh
+
+display_selection()
+{
+        echo "Please choose the direction for characters transmission"
+        echo "1. From PC to ADS.  2. From ADS to PC."
+        echo -n "Your Choice[1, 2]:"
+}
+display_receive()
+{
+	echo "Send text file on PC with hyperterminal in 15 seconds"
+	echo "Note: the received file on ADS is /tmp/receive.txt"
+}
+display_send()
+{
+	echo "Assign text file on PC with hyperterminal to receive data"
+	echo "then, press Enter to continue."
+	echo "Note: the generated file on ADS to be sent is /tmp/txt.txt"
+}
+
+while :
+do
+	clear
+	cat <<TITLE
+--------------------------------------------------------------------------
+UART driver test  
+Connect ADS to PC through UART2 with Hyperterminal
+1, 2, 3 for quick test, 4 for detailed test, H for help, Q for Quit:
+--------------------------------------------------------------------------
+  	     Baudrate Databits Parity Stopbits Flowcontrol Size
+	1 :    9600      8       N        1        N         1k
+	2 :   57600      8       N        1        N         1k  
+	3 :  115200      8       N        1        N         1k  
+	4 :  Detailed test
+	H :  Help Screen
+	Q :  Quit
+
+--------------------------------------------------------------------------
+TITLE
+
+	echo -e -n "\tYour Choice[1,2,3,4,H,Q] >"
+	read option
+
+	case $option in
+     1)    
+	display_selection
+	read direction
+	if [ $direction = 1 ]; then
+		display_receive
+		/test/uarttest 9600 8 N 1 N 1 1
+	elif [ $direction = 2 ]; then
+		display_send
+		read dummy
+		/test/txt_gen 1
+		/test/uarttest 9600 8 N 1 N 2 1
+	else	
+		echo -n "Error occurs."
+	fi
+	;;
+
+     2) 
+	display_selection
+	read direction
+	if [ $direction = 1 ]; then
+		display_receive
+		/test/uarttest 57600 8 N 1 N 1 1
+	elif [ $direction = 2 ]; then
+		display_send
+		read dummy
+		/test/txt_gen 1
+		/test/uarttest 57600 8 N 1 N 2 1
+	else	
+		echo -n "Error occurs."
+	fi
+	;; 
+
+     3)  
+	display_selection
+	read direction
+	if [ $direction = 1 ]; then
+		display_receive
+		/test/uarttest 115200 8 N 1 N 1 1
+	elif [ $direction = 2 ]; then
+		display_send
+		read dummy
+		/test/txt_gen 1
+		/test/uarttest 115200 8 N 1 N 2 1
+	else	
+		echo -n "Error occurs."
+	fi
+	;;
+
+  4)	echo "Please assign the parameter"
+	echo -n "Baudrate:"
+	read baudrate
+	echo -n "Databits(7, 8):"
+	read databits
+	echo -n "Parity(N/n, O/o, E/e):"
+	read parity
+	echo -n "Stopbits(1, 2):"
+	read stopbits
+	echo -n "Flowcontrol(N/n,Y/y):"
+	read flowcontrol
+	echo -n "Direction(1 for PC to ADS, 2 for ADS to PC):"
+	read direction
+	echo -n "Transfersize(1-50, 1 means 1k):"
+	read size
+	if [ $direction = 1 ]; then
+		display_receive
+	elif [ $direction = 2 ]; then
+		display_send
+		read dummy
+	else
+		echo -n "Error occurs."
+	fi
+
+	/test/txt_gen $size
+	/test/uarttest $baudrate $databits $parity $stopbits $flowcontrol $direction $size
+	;;
+
+     H|h)
+	clear
+	cat <<HELP
+============================== Help Screen ====================================
+   This program is intended for test of UART driver.
+   First of all, please ensure that PC and ADS have the same transmission/
+ reception parameters for each process.
+   In menu, option 1, 2 or 3 is configurated with fixed transmission/reception
+ parameters. Option 4 is selected for further test, you should manually set
+ the transmission/receptions parameters.
+   Note also that:
+     1. When transfer characters from PC to ADS, the received file on ADS is 
+ /tmp/receive.txt which you should compare the sent file from PC with manually.
+     2. When transfer characters from ADS to PC, the generated file to be sent 
+ on ADS is /tmp/txt.txt which you should compare the received file on PC with 
+ manually. 
+===============================================================================
+
+
+HELP
+	;;
+     Q|q) 
+	exit 0
+	;;
+     *)  
+	echo -e "\tUnknown user response."
+	;;
+esac
+	echo -e -n "\tPress Enter to continue."
+	read dummy
+done
+

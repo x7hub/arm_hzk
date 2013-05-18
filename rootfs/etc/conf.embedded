@@ -1,0 +1,38 @@
+# Web server
+CONFIG_OS_WEB_SERVER=n
+# Mount USB device file system on /proc/bus/usb
+CONFIG_OS_USBDEVFS=y
+# System has a framebuffer based console
+CONFIG_OS_FB_CONSOLE=n
+# /proc file system utilities
+CONFIG_OS_PROCPS=y
+# Microwindows/nano-X environment
+CONFIG_OS_MICROWINDOWS=n
+# System uses DHCP to discover networking addresses
+CONFIG_OS_NET_DHCP=n
+# Domain name of system
+CONFIG_OS_DOMAINNAME=localdomain
+# EXT2 file system utilities
+CONFIG_OS_E2FSPROGS=y
+# Standard libraries
+CONFIG_OS_LIBC6=y
+# Startup Microwindows/nano-X environment
+CONFIG_OS_MICROWINDOWS_STARTUP=n
+# Linux module utilities
+CONFIG_OS_MODUTILS=y
+# Name of system
+CONFIG_OS_LOCALHOST=localhost
+# A suite of tiny Unix utilies for logging into an embedded system
+CONFIG_OS_TINYLOGIN=y
+# Import foreign packages/files
+CONFIG_OS_IMPORT=y
+# Name of system image
+CONFIG_OS_ROM_NAME=system.rom
+# Device name of serial port 0
+CONFIG_OS_SERIAL_PORT_0=/dev/ttyAM0
+# DOS file system utilities
+CONFIG_OS_DOSFSTOOLS=n
+# Device name of serial port 1
+CONFIG_OS_SERIAL_PORT_1=/dev/ttyAM1
+# Networking
+CONFIG_OS_NET=n

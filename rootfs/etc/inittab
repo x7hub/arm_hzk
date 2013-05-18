@@ -1,0 +1,19 @@
+# Boot-time system configuration/initialization script.
+# This is run first except when booting in single-user mode.
+#
+::sysinit:/etc/init.d/rcS
+
+# /bin/sh invocations on selected ttys
+#
+# Start an "askfirst" shell on the console (whatever that may be)
+::askfirst:/bin/sh
+# Start an "askfirst" shell on /dev/tty2
+tty2::askfirst:/bin/sh
+
+#
+# Example how to put a getty on a modem line.
+#ttyS2::respawn:/sbin/getty -x0 -s 57600 ttyS2
+
+# Stuff to do before rebooting
+::ctrlaltdel:/bin/umount -a -r > /dev/null 2>&1
+::ctrlaltdel:/sbin/swapoff -a > /dev/null 2>&1

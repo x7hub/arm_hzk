@@ -1,0 +1,8 @@
+#! /bin/sh
+
+echo "eLinuxBSP 0.3.0 digi driver test"
+
+insmod /drivers/digi.o
+/test/pen_test
+
+

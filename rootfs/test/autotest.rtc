@@ -1,0 +1,11 @@
+#! /bin/sh
+cd /tmp
+
+echo "RTC driver test"
+echo
+
+insmod /drivers/rtc.o
+chmod +x /test/rtc-test
+
+echo "Now we'll start the RTC test ..."
+/test/rtc-test

@@ -1,0 +1,9 @@
+#! /bin/sh
+cd /tmp
+
+echo "PenDevice driver test"
+echo
+
+echo "test the driver with test program,"
+/test/asp_test
+

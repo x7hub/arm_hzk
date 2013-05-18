@@ -1,0 +1,7 @@
+/dev/rom0 / romfs rw 0 1
+proc /proc proc rw 0 0
+/dev/sdisk14m /mnt/sdisk14m vfat rw 0 0
+tmpfs /dev/shm tmpfs defaults 0 0
+/dev/mmcsd /mnt/mmcsd vfat rw 0 0
+/dev/mmc /mnt/mmcsd vfat rw 0 0
+/dev/ms /mnt/ms vfat rw 0 0

@@ -1,0 +1,9 @@
+#! /bin/sh
+cd /tmp
+
+echo "DAC3550A driver test"
+echo
+insmod /drivers/dbmx-dac3550a-audio.o
+
+echo "Now download the MP3 file of your choice (either through serial or USB link),"
+echo "then type 'playmp3 mp3file' ..."

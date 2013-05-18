@@ -1,0 +1,47 @@
+#! /bin/sh
+if [ $1 = ".." ]; then
+  # echo "back dir"
+  backdir `cat /tmp/ftp.path` > /tmp/ftp.path
+else
+  if [ $1 = "/" ]; then
+    # echo "back to /"
+    echo / > /tmp/ftp.path
+  else
+    # echo "try to change directory"
+    qftp list `cat /tmp/host.ip`:21 -r `cat /tmp/ftp.path`/$1 > /dev/null 2> /tmp/err.log
+    if cat /tmp/err.log | grep "Change directory failed" > /dev/null; then
+      echo "directory not found"
+      for f in `ftpls | grep $1`
+      do
+        qftp list `cat /tmp/host.ip`:21 -r `cat /tmp/ftp.path`/$f > /dev/null 2> /tmp/err.log
+        if cat /tmp/err.log | grep "Change directory failed" > /dev/null; then
+          #echo "change directory failed
+        else
+          echo "Change directory to "$f"?"
+          read ans
+          if [ $ans = "y" ] || [ $ans = "Y" ]; then
+            if [ `cat /tmp/ftp.path` = "/" ]; then
+              # echo "IT'S ROOT"
+              echo `cat /tmp/ftp.path`$f > /tmp/ftp.path
+            else
+              # echo "It's not root"
+              echo `cat /tmp/ftp.path`/$f > /tmp/ftp.path
+            fi
+            ftppwd
+            exit
+          fi
+        fi
+      done
+    else
+      # echo "path valid"
+      if [ `cat /tmp/ftp.path` = "/" ]; then
+        # echo "IT'S ROOT"
+        echo `cat /tmp/ftp.path`$1 > /tmp/ftp.path
+      else
+        # echo "It's not root"
+        echo `cat /tmp/ftp.path`/$1 > /tmp/ftp.path
+      fi
+    fi
+  fi
+fi
+ftppwd

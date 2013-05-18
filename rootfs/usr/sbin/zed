@@ -1,0 +1,5 @@
+#! /bin/sh
+export COLUMNS=80
+export LINES=24
+zedApp $@
+

@@ -1,0 +1,63 @@
+#! /bin/sh
+#set -x
+echo "eLinuxBSP RootDisk ver 0.3.8"
+# Mount the /proc file system
+mount -t proc proc /proc
+# turn on flushing of buffers etc
+update
+# Tell the world things from /proc
+echo > /proc/cpuinfo
+# make some writable bits of filesystem
+echo "Creating writable /tmp"
+cd /
+mount -t tmpfs -o size=32m none /tmp
+
+mount -t tmpfs -o size=32m none /var
+mkdir -p /var/lib/pcmcia
+mkdir -p /var/lock/subsystem
+mkdir -p /var/run
+
+#ln frame buffer
+ln -s /dev/fbdir/0 /dev/fb
+ln -s /dev/fbdir/0 /dev/fb0
+
+#sound driver, not insmoded since csi will use the same dma
+#/sbin/insmod /drivers/dbmx-dac3550a-audio.o
+ln -s /dev/sound/dsp /dev/dsp
+ln -s /dev/sound/mixer /dev/mixer
+
+#Use regread for following judgement
+insmod /drivers/hwb.o
+
+#digi pen
+regread 0x0021B804
+if [ $? -eq 2 ] 
+then
+   echo "It's MXL silicon!"
+   insmod /drivers/digi.o
+   ln -s /dev/digi /dev/touchpanel
+   ln -s /dev/digi /dev/tpanel
+   ln -s /dev/digi /dev/h3600_tsraw
+else
+  echo "It's MX1 (Corsica) silicon!"
+  insmod /drivers/asp.o
+  ln -s /dev/PenDevice /dev/touchpanel
+  ln -s /dev/PenDevice /dev/tpanel
+  ln -s /dev/PenDevice /dev/h3600_tsraw
+fi
+
+/sbin/ifconfig lo 127.0.0.1
+
+cp /bitmap/penguin.bin /dev/fbdir/0
+
+/sbin/insmod /drivers/cs89x0.o MAC=00:02:B3:06:2B:FF
+#/bin/dhcpcd eth0
+
+#for NFS
+/sbin/portmap
+
+#for telnet and ftp server, please edit inet.conf file 
+/sbin/inetd
+
+exit(0) 
+

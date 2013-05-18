@@ -1,0 +1,11 @@
+#! /bin/sh
+
+insmod /drivers/csi2c.o
+
+echo
+echo "Use command \"./testcsi\" for capture with auto exposure controlled by gain."
+echo
+echo "Use command \"./testcsi v\" for capture with auto exposure controlled by "
+echo "virtual frame size (effectively exposure time)"
+
+

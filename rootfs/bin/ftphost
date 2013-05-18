@@ -1,0 +1,8 @@
+#! /bin/sh
+if test -z $1; then
+  echo "syntax: ftphost IPaddress"
+else
+  echo $1 > /tmp/host.ip
+  echo / > /tmp/ftp.path
+fi
+

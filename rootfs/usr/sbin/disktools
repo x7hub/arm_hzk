@@ -1,0 +1,119 @@
+#! /bin/sh
+
+quit=0
+while [ $quit -eq 0 ]
+do
+  clear
+  echo "MX1BSP Disk Tools" 
+  echo
+  if mount | grep fdisk > /dev/null; then
+    echo "FDISK mounted"
+  else
+    echo "FDISK not mounted"
+  fi
+  if mount | grep sdisk14m > /dev/null; then
+    echo "SDISK14M mounted"
+  else
+    echo "SDISK14M not mounted"
+  fi
+  if mount | grep sdisk2m > /dev/null; then
+    echo "SDISK2M mounted"
+  else
+    echo "SDISK2M not mounted"
+  fi
+  echo
+
+  echo "0 Quit"
+  if mount | grep sdisk2m > /dev/null; then
+    echo "1 Write content of SDISK2M back to FDISK"
+  else
+    echo "1 Copy content of FDISK to SDISK2M"
+  fi
+
+  if mount | grep sdisk14m > /dev/null; then
+    echo "2 umount SDISK14M"
+  else
+    echo "2 mount SDISK14M"
+  fi
+
+  echo "3 format SDISK14M (with VFAT)"
+
+  echo
+  echo "Please enter a number ..."
+  read choice
+  echo
+  if test $choice -le 3; then
+    if test $choice -eq 0; then
+      quit=1
+    else
+      case $choice in
+      1) if mount | grep sdisk2m > /dev/null; then
+		   # we'll try to program FDISK
+           if test "`pwd`" = "/mnt/sdisk2m"; then
+             echo "You cannot program FDISK while in /mnt/sdisk2m"
+             echo "Change to another directory and run this script again."
+				 echo
+             quit=1
+           else
+				 writefdisk
+				 umount /mnt/fdisk 2> /dev/null
+				 mount /dev/fdisk /mnt/fdisk
+           fi
+         else # we'll copy data from FDISK to SDISK2M
+			  mke2fs /dev/sdisk2m
+			  mount /dev/sdisk2m /mnt/sdisk2m
+			  # see if fdisk is mounted
+			  if mount | grep fdisk; then
+				 cp /mnt/fdisk/* /mnt/sdisk2m/.
+			  fi
+         fi;;
+      2) if mount | grep sdisk14m > /dev/null; then
+           if test "`pwd`" = "/mnt/sdisk14m"; then
+             echo "You cannot umount SDISK14M while in /mnt/sdisk14m"
+             echo "Change to another directory and run this script again."
+				 echo
+             quit=1
+		     else
+             umount /mnt/sdisk14m
+		     fi
+         else
+			  mount -t vfat /dev/sdisk14m /mnt/sdisk14m 2> /dev/null
+			  if !(mount | grep sdisk14m); then
+				 goodans=0
+      		 while [ $goodans -eq 0 ]
+				 do
+  			      echo "SDISK14M has not been formated, format it now (y/n)?"
+				   read ans
+				   if test "$ans" = "y"; then
+                 formatsdisk14m
+					  mount -t vfat /dev/sdisk14m /mnt/sdisk14m 2> /dev/null
+					  goodans=1
+				   fi
+				   if test "$ans" = "n"; then
+					  quit=1
+					  goodans=1
+				   fi
+					if test $goodans -eq 0; then
+					  echo
+					  echo "Bad answer."
+					fi
+				 done
+			  fi
+  			fi;;
+      3) if mount | grep sdisk14m 2> /dev/null; then
+           if test "`pwd`" = "/mnt/sdisk14m"; then
+             echo "You cannot format SDISK14M while in /mnt/sdisk14m"
+             echo "Change to another directory and run this script again."
+				 echo
+             quit=1
+		     else
+			    umount /mnt/sdisk14m
+		     fi
+		   fi
+			if test $quit -eq 0; then
+			  formatsdisk14m
+		   fi;;
+      esac
+    fi
+  fi
+done

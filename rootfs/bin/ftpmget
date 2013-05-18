@@ -1,0 +1,11 @@
+#! /bin/sh
+for f in `ftpls | grep $1`
+do
+  if [ `echo $f` != "." ] && [ `echo $f` != ".." ]; then
+    echo "Download "$f"?"
+    read ans
+    if [ $ans = "y" ] || [ $ans = "Y" ]; then
+      ftpget $f
+    fi
+  fi  
+done

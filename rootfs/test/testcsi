@@ -1,0 +1,5 @@
+#! /bin/sh
+insmod /test/frm.o
+/test/doCapture /dev/csi2c
+rmmod frm
+

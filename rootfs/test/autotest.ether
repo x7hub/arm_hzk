@@ -1,0 +1,18 @@
+#! /bin/sh
+cd /tmp
+echo "eLinuxBSP 0.3.0 ethernet driver test"
+echo
+
+echo "Copy /test/server to /tmp"
+cp /test/server server
+chmod +x server
+
+echo "Copy /test/client /tmp"
+cp /test/client client
+chmod +x client
+
+echo "Run server at backgrond, and server will send 'Hello' to client"
+./server &
+./client localhost
+
+

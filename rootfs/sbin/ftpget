@@ -1,0 +1,7 @@
+#! /bin/sh
+if [ ! -f /tmp/host.ip ]; then
+  echo "You should set IP address of host with ftphost first"
+else
+  qftp get `cat /tmp/host.ip`:21 -r `cat /tmp/ftp.path` $*
+fi
+

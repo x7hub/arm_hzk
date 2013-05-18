@@ -1,0 +1,4 @@
+#! /bin/sh
+cd /
+umount /mnt/sdisk2m
+

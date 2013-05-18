@@ -1,0 +1,14 @@
+#! /bin/sh
+
+cd /tmp
+
+#echo "extract QTE desktop..."
+cat /qt/qt.tgz | gunzip - | tar x
+
+export HOME=/tmp
+export QTDIR=/tmp/QtPalmtop
+export QPEDIR=/tmp/QtPalmtop
+export QWS_MOUSE_PROTO=TPanel:/dev/h3600_ts
+export LD_LIBRARY_PATH=/tmp/QtPalmtop/lib:$LD_LIBRARY_PATH
+
+/tmp/QtPalmtop/bin/qpe -qws &

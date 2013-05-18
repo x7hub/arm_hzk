@@ -1,0 +1,24 @@
+#! /bin/sh
+cd /tmp
+
+echo "PWM driver test"
+echo
+
+chmod +x /test/testplaymode
+chmod +x /test/testtonemode
+insmod /drivers/pwm.o
+
+echo
+echo "Now we'll do the PCM playback test."
+
+/test/testplaymode
+
+echo
+echo "Now we'll do the tone playing test."
+
+/test/testtonemode
+
+echo
+echo "PWM driver test finished."
+rmmod pwm
+echo "Press any key to continue ..."
